@@ -82,13 +82,47 @@ string td3Math::mult(vector<vector<string> > operands)
 
 string td3Math::div(vector<vector<string> > operands)
 {
+    if (operands.at(1).at(0) == "0")
+        return "-nan";
     bool op1 = td3Utility::isFloat(operands.at(0).at(0));
     bool op2 = td3Utility::isFloat(operands.at(1).at(0));
-    return td3Utility::toString(
-        (op1 ? td3Utility::stof(operands.at(0).at(0))
-             : td3Utility::stoi(operands.at(0).at(0)))
-      / (op2 ? td3Utility::stof(operands.at(1).at(0))
-             : td3Utility::stoi(operands.at(1).at(0))), op1 || op2);
+
+    //This could be shorter with ?:, but it promotes the ints to doubles and
+    //screws up intiger division.
+    if (!op1 && !op2)
+    {
+        return td3Utility::toString
+        (
+            td3Utility::stoi(operands.at(0).at(0)) / td3Utility::stoi(operands.at(1).at(0)),
+            op1 || op2
+        );
+    }
+    else if (!op1 && op2)
+    {
+        return td3Utility::toString
+        (
+            td3Utility::stoi(operands.at(0).at(0)) / td3Utility::stof(operands.at(1).at(0)),
+            op1 || op2
+        );
+    }
+    else if (op1 && !op2)
+    {
+        return td3Utility::toString
+        (
+            td3Utility::stof(operands.at(0).at(0)) / td3Utility::stoi(operands.at(1).at(0)),
+            op1 || op2
+        );
+    }
+    else if (op1 && op2)
+    {
+        return td3Utility::toString
+        (
+            td3Utility::stof(operands.at(0).at(0)) / td3Utility::stof(operands.at(1).at(0)),
+            op1 || op2
+        );
+    }
+    else
+        return "That's what your mom did last night, Trebeck";
 }
 
 string td3Math::exponent(vector<vector<string> > operands)
@@ -106,8 +140,6 @@ string td3Math::mod(vector<vector<string> > operands)
     bool op1 = td3Utility::isFloat(operands.at(0).at(0));
     bool op2 = td3Utility::isFloat(operands.at(1).at(0));
     return td3Utility::toString( 
-        fmod((op1 ? td3Utility::stof(operands.at(0).at(0))
-                  : td3Utility::stoi(operands.at(0).at(0))),
-             (op2 ? td3Utility::stof(operands.at(1).at(0))
-                  : td3Utility::stoi(operands.at(1).at(0)))), op1 || op2);
+        fmod( td3Utility::stof(operands.at(0).at(0)),
+              td3Utility::stof(operands.at(1).at(0))), op1 || op2);
 }
